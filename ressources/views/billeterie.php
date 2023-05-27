@@ -28,14 +28,13 @@ if (isset($_SESSION['user'])) {
     $infos_users->execute(array($_SESSION['user']));
     $info = $infos_users->fetch();
 
-    $event_infos = $bdd->prepare('SELECT name, id FROM salle WHERE id=1 ');
-    $event_infos->execute(array($_SESSION['user']));
-    $event = $event_infos->fetch();
+    $event_infos = $bdd->prepare('SELECT name, id FROM salle');
+    $event_infos->execute();
+    $events = $event_infos->fetchAll(PDO::FETCH_ASSOC);
 
-    $nom_star = $bdd->prepare('SELECT * FROM star WHERE id = id ');
-    $nom_star->execute(array($_SESSION['user']));
-    $stars = $nom_star->fetchAll();
-
+    $nom_star = $bdd->prepare('SELECT * FROM star');
+    $nom_star->execute();
+    $stars = $nom_star->fetchAll(PDO::FETCH_ASSOC);
 
     $role = $info['role'];
 
@@ -56,6 +55,7 @@ if (isset($_SESSION['user'])) {
                         <label class="coteD">Nom de la star : </label>
                         <select class="nomStar" name="nomStar"> Nom de la star
                             <?php
+
                             foreach ($stars as $star) {
                             ?>
                                 <option value="<?= $star['name'] ?>"><?= $star['name'] ?></option>
@@ -78,7 +78,13 @@ if (isset($_SESSION['user'])) {
                     <div class="titrenom">
                         <label class="lab">Nom de la salle</label>
                         <select class="selectSalle" name="salle">
-                            <option value="<?= $event['id'] ?>"><?= $event['name'] ?></option>
+                            <?php
+                            foreach ($events as $event) {
+                            ?>
+                                <option value="<?= $event['id'] ?>"><?= $event['name'] ?></option>
+                            <?php
+                            }
+                            ?>
                         </select>
                         <label class="coteD">Infos de l'évènement : </label>
                         <textarea type="textarea" placeholder="Informations" name="InfosEvent" class="addinput"></textarea>
@@ -116,9 +122,6 @@ foreach ($resultat as $row) {
             </button>
         </a>
     </div>
-
-
-
 
 <?php
 }
