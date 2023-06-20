@@ -24,10 +24,6 @@ include './navbar.php'
 
 if (isset($_SESSION['user'])) {
 
-    $infos_users = $bdd->prepare('SELECT role FROM users WHERE id=?');
-    $infos_users->execute(array($_SESSION['user']));
-    $info = $infos_users->fetch();
-
     $event_infos = $bdd->prepare('SELECT name, id FROM salle');
     $event_infos->execute();
     $events = $event_infos->fetchAll(PDO::FETCH_ASSOC);
@@ -36,6 +32,9 @@ if (isset($_SESSION['user'])) {
     $nom_star->execute();
     $stars = $nom_star->fetchAll(PDO::FETCH_ASSOC);
 
+    $infos_users = $bdd->prepare('SELECT role FROM users WHERE id=?');
+    $infos_users->execute(array($_SESSION['user']));
+    $info = $infos_users->fetch();
     $role = $info['role'];
 
     if ($role == 1) {
@@ -99,15 +98,20 @@ if (isset($_SESSION['user'])) {
                 </div>
             </div>
         </form>
-
-
     <?php
     }
 }
-$event_values = new mysqli("localhost", "root", "", "g4_arena");
-$event_values->set_charset("utf8");
-$requete = 'SELECT * FROM evenements WHERE id=id';
-$resultat = $event_values->query($requete);
+// $event_values = new mysqli("localhost", "root", "", "g4_arena");
+// $event_values->set_charset("utf8");
+// $requete = 'SELECT * FROM evenements';
+// $resultat = $event_values->query($requete);
+
+
+
+
+$event_values = $bdd->prepare('SELECT * FROM evenements');
+$event_values->execute();
+$resultat = $event_values->fetchAll(PDO::FETCH_ASSOC);
 
 foreach ($resultat as $row) {
 

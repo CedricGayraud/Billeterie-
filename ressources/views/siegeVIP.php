@@ -11,9 +11,12 @@
     <title>VIP</title>
     <?php
     session_start();
-    //connection à la bdd
+
     $_SESSION['current_page'] = $_SERVER['REQUEST_URI'];
+
+    //connection à la bdd
     require_once('C:\wamp64\www\g4arena\configbdd.php');
+
     $places = $bdd->query('SELECT * From places');
     $info = $places->fetch();
     if (isset($_SESSION['user'])) {
@@ -22,10 +25,14 @@
         $affich_users->execute(array($_SESSION['user']));
         $affichage = $affich_users->fetch();
     }
-    $mysqli = new mysqli("localhost", "root", "", "g4_arena");
 
+    $mysqli = new mysqli("localhost", "root", "", "g4_arena");
     $requete = 'SELECT * FROM evenements';
     $resultat = $mysqli->query($requete);
+
+    // $mysqli = $bdd->prepare('SELECT * FROM evenements');
+    // $mysqli->execute();
+    // $resultat = $mysqli->fetchAll(PDO::FETCH_ASSOC);
 
     $totalselect = $bdd->query('SELECT COUNT(*) As totalselect From places Where statut="selected" and id_zone="6"');
     $totalselected = $totalselect->fetch();
@@ -66,8 +73,8 @@
                 ?>
             </div>
         </div>
-    <?php } ?>
-    <?php
+    <?php }
+
     if (empty($_SESSION['user'])) {
     ?>
         <div class="connexionRecquise">
@@ -87,7 +94,7 @@
             $mysqli->set_charset("utf8");
             $requete1a25 = 'SELECT * FROM places WHERE rang = "A" AND id_event = ' . $id_event . ' AND id_zone = 6';
             $resultat = $mysqli->query($requete1a25);
-
+            //id_zone = 6 correspond à la zone VIP
             while ($ligne = $resultat->fetch_assoc()) {
 
                 $statut = $ligne['statut'];

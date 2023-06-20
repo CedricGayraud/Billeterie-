@@ -36,15 +36,6 @@ if (isset($_POST['envoyerselected'])) {
     header('Location:/ressources/views/siegeVIP.php?id_event=' . $valeurs['id_event'] . '');
 }
 
-// if (isset($_POST['envoyerreserve'])) {
-//     $places = $bdd->prepare('UPDATE places SET statut = "dispo", id_user= 1 WHERE id=:id');
-//     $places->execute(array(
-//         'id' => $_POST['envoyerreserve'],
-//     ));
-
-//     header('Location:/ressources/views/siegeVIP.php?id_event=' . $valeurs['id_event'] . '');
-// }
-
 if (isset($_POST['reservez'])) {
     $idUser = $_SESSION['user'];
     $places = $bdd->prepare('UPDATE places SET statut = "reserve", id_user=:idUser WHERE statut="selected" AND id_zone=6');

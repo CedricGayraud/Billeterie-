@@ -65,6 +65,7 @@
             </div>
         </a>
     </div>
+
     <a href="/ressources/views/siegeZone1.php?id_event=<?= $valeurs['id_event'] ?>">
         <div class="zone1">
             <div class="txtzone1">

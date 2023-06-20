@@ -1,6 +1,7 @@
 <?php
-//connection à la bdd
 $_SESSION['current_page'] = $_SERVER['REQUEST_URI'];
+
+//connection à la bdd
 require_once('C:\wamp64\www\g4arena\configbdd.php');
 
 if (isset($_SESSION['user'])) {

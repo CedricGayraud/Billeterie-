@@ -4,15 +4,13 @@ session_start();
 //connection à la bdd
 require_once('C:\wamp64\www\g4arena\configbdd.php');
 $_SESSION['current_page'] = $_SERVER['REQUEST_URI'];
-$id_event = $_GET['id'];
-$connect = new mysqli("localhost", "root", "", "g4_arena");
-$connect->set_charset("utf8");
-$query = "SELECT * FROM evenements WHERE id = " . $id_event;
-$valeurs = $connect->query($query);
 
-$dispoPlaces = $bdd->query('SELECT COUNT(*) As totalPlaces From places Where id_event = ' . $id_event . '');
-$totalPlaces = $dispoPlaces->fetch();
-$countTotalPlaces = $totalPlaces['totalPlaces'];
+$id_event = $_GET['id'];
+
+$connect = $bdd->query('SELECT * FROM evenements WHERE id = ' . $id_event . '');
+$connect->execute();
+$valeurs = $connect->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 
 <head>
@@ -23,11 +21,13 @@ $countTotalPlaces = $totalPlaces['totalPlaces'];
     <meta charset="utf8">
 </head>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
 <?php
 include './navbar.php'
 ?>
 
 <section class="fullwidth">
+
     <?php
     foreach ($valeurs as $event) {
     ?>
@@ -38,8 +38,15 @@ include './navbar.php'
             <p class="eventDesc"><?= $event['infos'] ?></p>
             <a class="aRes" href="./reservation.php?id=<?= $event['id'] ?>">
                 <button class="btnRes">RESERVER</button></a>
+
             <div class="gestionPlaces">
+
                 <?php
+
+                $dispoPlaces = $bdd->query('SELECT COUNT(*) As totalPlaces From places Where id_event = ' . $id_event . '');
+                $totalPlaces = $dispoPlaces->fetch();
+                $countTotalPlaces = $totalPlaces['totalPlaces'];
+
                 if (isset($_SESSION['user'])) {
 
                     $infos_users = $bdd->prepare('SELECT role FROM users WHERE id=?');
@@ -89,10 +96,10 @@ include './navbar.php'
     <section class="eventRight">
         <h1 class="templateTitle">Autres évènements</h1>
         <?php
-        $event_values = new mysqli("localhost", "root", "", "g4_arena");
-        $event_values->set_charset("utf8");
-        $requete = 'SELECT * FROM evenements WHERE id=id';
-        $resultat = $event_values->query($requete);
+
+        $event_values = $bdd->prepare('SELECT * FROM evenements');
+        $event_values->execute();
+        $resultat = $event_values->fetchAll();
 
         foreach ($resultat as $row) {
 
